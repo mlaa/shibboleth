@@ -325,7 +325,7 @@ function shibboleth_authenticate_user() {
 	update_user_meta($user->ID, 'shibboleth_account', true);
 	shibboleth_update_user_data($user->ID);
 	if ( shibboleth_get_option('shibboleth_update_roles') ) {
-		$user->set_role($user_role);
+		//$user->set_role($user_role);
 		do_action( 'shibboleth_set_user_roles', $user );
 	}
 

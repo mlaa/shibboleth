@@ -354,14 +354,14 @@ if ( apply_filters('shibboleth_role_mapping_override',false) === false ):
 				</tr>
 
 				<tr>
-					<th scope="row"><label for="update_roles"><?php _e('Update User Roles', 'shibboleth') ?></label></th>
+					<th scope="row"><label for="update_roles"><?php _e('Update User Memberships', 'shibboleth') ?></label></th>
 					<td>
 						<input type="checkbox" id="update_roles" name="update_roles" <?php echo shibboleth_get_option('shibboleth_update_roles') ? ' checked="checked"' : '' ?> />
-						<label for="update_roles"><?php _e('Use Shibboleth data to update user role mappings each time the user logs in.', 'shibboleth') ?></label>
+						<label for="update_roles"><?php _e('Use Shibboleth data to update user memberships each time the user logs in.', 'shibboleth') ?></label>
 
-						<p><?php _e('Be aware that if you use this option, you should <strong>not</strong> update user roles manually,'
-						. ' since they will be overwritten from Shibboleth the next time the user logs in.  Note that Shibboleth data'
-					   	. ' is always used to populate the initial user role during account creation.', 'shibboleth') ?></p>
+						<p><?php _e('Be aware that if you use this option, you should <strong>not</strong> update user memberships manually,'
+						. ' since they will be overwritten from Shibboleth the next time the user logs in.  The exception is user created groups where membership is controlled manually in WP. Note that Shibboleth data'
+					   	. ' is always used to populate the initial user role and memberships during account creation.', 'shibboleth') ?></p>
 
 					</td>
 				</tr>
