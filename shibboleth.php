@@ -326,21 +326,7 @@ function shibboleth_authenticate_user() {
 	shibboleth_update_user_data($user->ID);
 	if ( shibboleth_get_option('shibboleth_update_roles') ) {
 		do_action( 'shibboleth_set_user_roles', $user );
-		global $wp_roles;
-		$user_role_set = false;
-		foreach ( $wp_roles->roles as $role_key=>$role_name ) {
-			if ( false !== strpos( $role_key, 'bbp_' ) ) {
-				$user_role_set = user_can( $user, $role_key );
-			}
-			if ( $user_role_set ) {
-				break;
-			}
-		}
-		hcommons_write_error_log( 'info', '****AFTER_SHIBBOLETH_SET_USER_ROLES****-'.var_export( $user_role_set, true ) . var_export( $user, true ) );
-		if ( ! $user_role_set && ! empty( $user_role ) ) {
-			$user->set_role($user_role);
-		}
-
+		$user->set_role($user_role);
 	}
 
 	return $user;
