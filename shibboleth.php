@@ -196,11 +196,11 @@ function shibboleth_authenticate($user, $username, $password) {
 		$parsed_initiator_url = parse_url( $initiator_url );
 
 		if ( ! empty( $parsed_redirect_to_url['host'] ) ) {
-			$initiator_url = preg_replace(
-				"/{$parsed_initiator_url['host']}/",
-				$parsed_redirect_to_url['host'],
-				$initiator_url
-			);
+			$initiator_url =
+				"{$parsed_initiator_url['scheme']}://" .
+				"{$parsed_redirect_to_url['host']}" .
+				"{$parsed_initiator_url['path']}?" .
+				"{$parsed_initiator_url['query']}";
 		}
 
 		wp_redirect($initiator_url);
