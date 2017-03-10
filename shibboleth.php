@@ -254,6 +254,27 @@ add_filter('login_url', 'shibboleth_login_url');
 function shibboleth_logout() {
 	$logout_url = shibboleth_get_option('shibboleth_logout_url');
 
+	$parsed_logout_url = parse_url( $logout_url );
+
+	if ( isset( $parsed_logout_url['host'] ) && $parsed_logout_url['host'] !== COOKIE_DOMAIN ) {
+		$logout_url = preg_replace(
+			"/{$parsed_logout_url['host']}/",
+			COOKIE_DOMAIN,
+			$logout_url
+		);
+
+		// we can't assume the logged-out page exists on non-primary domains, so set "return" to /
+		parse_str( $parsed_logout_url['query'], $parsed_query );
+		if ( isset( $parsed_query['return'] ) && false !== strpos( $parsed_query['return'], 'logged-out' ) ) {
+			$parsed_query['return'] = '/';
+			$logout_url =
+				"{$parsed_logout_url['scheme']}://" .
+				COOKIE_DOMAIN .
+				"{$parsed_logout_url['path']}?" .
+				http_build_query( $parsed_query );
+		}
+	}
+
 	if ( !empty($logout_url) && shibboleth_session_active() ) {
 		wp_redirect($logout_url);
 		exit;
