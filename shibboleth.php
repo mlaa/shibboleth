@@ -171,11 +171,32 @@ function shibboleth_authenticate($user, $username, $password) {
 	if ( shibboleth_session_active() ) {
 		return shibboleth_authenticate_user();
 	} else {
-		if (isset( $_REQUEST['redirect_to'] )) {
-			$initiator_url = shibboleth_session_initiator_url( $_REQUEST['redirect_to'] );
+		// keep initiator url on the mapped domain by matching the redirect_to url
+		// otherwise the session starts on a domain different from where user is trying to log in
+		$redirect_to = ( function() {
+			if ( isset( $_REQUEST['redirect_to'] ) ) {
+				$redirect_to = $_REQUEST['redirect_to'];
+			} else if ( isset( $_COOKIE['redirect_to'] ) ) {
+				$redirect_to = $_COOKIE['redirect_to'];
+			}
+			return $redirect_to;
+		} )();
+
+		if (isset( $redirect_to )) {
+			$initiator_url = shibboleth_session_initiator_url( $redirect_to );
 		} else {
 			$initiator_url = shibboleth_session_initiator_url();
 		}
+
+		$parsed_redirect_to_url = parse_url( $redirect_to );
+		$parsed_initiator_url = parse_url( $initiator_url );
+
+		$initiator_url = preg_replace(
+			"/{$parsed_initiator_url['host']}/",
+			$parsed_redirect_to_url['host'],
+			$initiator_url
+		);
+
 		wp_redirect($initiator_url);
 		exit;
 	}
