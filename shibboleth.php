@@ -24,7 +24,7 @@ if ($shibboleth_plugin_revision === false || SHIBBOLETH_PLUGIN_REVISION != $shib
  */
 function shibboleth_auto_login() {
 	$shibboleth_auto_login = shibboleth_get_option('shibboleth_auto_login');
-	if (
+	if ( function_exists( 'hcommons_check_non_member_active_session' ) &&
 		( ! is_user_logged_in() && ! hcommons_check_non_member_active_session() ) &&
 		shibboleth_session_active() &&
 		$shibboleth_auto_login
