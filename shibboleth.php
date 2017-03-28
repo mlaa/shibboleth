@@ -24,6 +24,24 @@ if ($shibboleth_plugin_revision === false || SHIBBOLETH_PLUGIN_REVISION != $shib
  */
 function shibboleth_auto_login() {
 	$shibboleth_auto_login = shibboleth_get_option('shibboleth_auto_login');
+
+	// auto-login global super-admins
+	// this is necessary when the super-admin does not have an explicit role on the current network
+	if ( defined( 'GLOBAL_SUPER_ADMINS' ) ) {
+		$global_super_admin_list = constant( 'GLOBAL_SUPER_ADMINS' );
+		$global_super_admins = explode( ',', $global_super_admin_list );
+
+		$shib_headers = shibboleth_get_option('shibboleth_headers');
+		$user = get_user_by( 'login', $_SERVER[ $shib_headers['username']['name'] ] );
+
+		if ( ! is_user_logged_in() && in_array( $user->user_login, $global_super_admins ) ) {
+			wp_set_current_user( $user_id );
+			wp_set_auth_cookie( $user_id );
+			return;
+		}
+	}
+
+	// all other users
 	if ( function_exists( 'hcommons_check_non_member_active_session' ) &&
 		( ! is_user_logged_in() && ! hcommons_check_non_member_active_session() ) &&
 		shibboleth_session_active() &&
