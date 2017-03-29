@@ -32,12 +32,14 @@ function shibboleth_auto_login() {
 		$global_super_admins = explode( ',', $global_super_admin_list );
 
 		$shib_headers = shibboleth_get_option('shibboleth_headers');
-		$user = get_user_by( 'login', $_SERVER[ $shib_headers['username']['name'] ] );
+		if ( isset( $_SERVER[ $shib_headers['username']['name'] ] ) ) {
+			$user = get_user_by( 'login', $_SERVER[ $shib_headers['username']['name'] ] );
 
-		if ( ! is_user_logged_in() && in_array( $user->user_login, $global_super_admins ) ) {
-			wp_set_current_user( $user_id );
-			wp_set_auth_cookie( $user_id );
-			return;
+			if ( ! is_user_logged_in() && in_array( $user->user_login, $global_super_admins ) ) {
+				wp_set_current_user( $user_id );
+				wp_set_auth_cookie( $user_id );
+				return;
+			}
 		}
 	}
 
