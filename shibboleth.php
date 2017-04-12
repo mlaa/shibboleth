@@ -35,9 +35,13 @@ function shibboleth_auto_login() {
 		if ( isset( $_SERVER[ $shib_headers['username']['name'] ] ) ) {
 			$user = get_user_by( 'login', $_SERVER[ $shib_headers['username']['name'] ] );
 
-			if ( ! is_user_logged_in() && in_array( $user->user_login, $global_super_admins ) ) {
-				wp_set_current_user( $user_id );
-				wp_set_auth_cookie( $user_id );
+			if (
+				$user &&
+				! is_user_logged_in() &&
+				in_array( $user->user_login, $global_super_admins )
+			) {
+				wp_set_current_user( $user->id );
+				wp_set_auth_cookie( $user->id );
 				return;
 			}
 		}
