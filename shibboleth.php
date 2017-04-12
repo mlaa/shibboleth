@@ -42,7 +42,8 @@ function shibboleth_auto_login() {
 			) {
 				wp_set_current_user( $user->id );
 				wp_set_auth_cookie( $user->id );
-				return;
+				wp_safe_redirect($_SERVER['REQUEST_URI']);
+				exit();
 			}
 		}
 	}
