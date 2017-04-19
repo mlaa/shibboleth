@@ -42,7 +42,7 @@ function shibboleth_auto_login() {
 			) {
 				wp_set_current_user( $user->id );
 				wp_set_auth_cookie( $user->id );
-				wp_safe_redirect($_SERVER['REQUEST_URI']);
+				wp_safe_redirect( get_site_url() . $_SERVER['REQUEST_URI'] );
 				exit();
 			}
 		}
@@ -60,7 +60,7 @@ function shibboleth_auto_login() {
 		if ( is_wp_error($userobj) ) {
 			// TODO: Proper error return.
 		} else {
-			wp_safe_redirect($_SERVER['REQUEST_URI']);
+			wp_safe_redirect( get_site_url() . $_SERVER['REQUEST_URI'] );
 			exit();
 		}
 	}
