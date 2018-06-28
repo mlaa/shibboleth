@@ -393,7 +393,7 @@ function shibboleth_authenticate_user() {
 	if ( !$user ) {
 		$error_message = 'Unable to create account based on data provided.';
 		if (defined('WP_DEBUG') && WP_DEBUG) {
-			$error_message .= '<!-- ' . print_r($_SERVER, true) . ' -->';
+			$error_message .= '<!-- ' . /* print_r($_SERVER, true) .*/ ' -->';
 		}
 		return new WP_Error('missing_data', $error_message);
 	}
@@ -533,11 +533,11 @@ function shibboleth_update_user_data($user_id, $force_update = false) {
 	$updated_user_id = wp_update_user($user_data);
 
 	if ( is_wp_error( $updated_user_id ) ) {
-		error_log( '**********SHIBBOLETH_NEW_USER_UPDATE_ERROR**********-' . var_export( $updated_user_id, true ) . '-' . var_export( $_SERVER, true ) );
+		error_log( '**********SHIBBOLETH_NEW_USER_UPDATE_ERROR**********-' . var_export( $updated_user_id, true ) );
 	} else {
 		$updated_user_data = get_user_by( 'ID', $updated_user_id );
 		if ( $updated_user_data->user_email !== $user_data['user_email'] ) {
-			error_log( '**********SHIBBOLETH_NEW_USER_UPDATE_MISMATCH**********-' .var_export( $user_data, true) . '-UPDATED_USER_DATA-' . var_export( $updated_user_data, true ) . '-' . var_export( $_SERVER, true ) );
+			error_log( '**********SHIBBOLETH_NEW_USER_UPDATE_MISMATCH**********-' . $user_data['user_email'] . '-UPDATED_USER_DATA-' . $updated_user_data->user_email );
 		}
 	}
 }
